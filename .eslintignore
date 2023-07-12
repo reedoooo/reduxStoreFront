@@ -1,0 +1,7 @@
+**/node_modules/*
+**/*.min.js
+**/vendor/*
+**/coverage/*
+**/build/*
+**/docs/*
+**/*.md

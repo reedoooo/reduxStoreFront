@@ -1,0 +1,54 @@
+
+
+:root, body {
+  background-color: rgb(75, 59, 92);
+  color: white;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  --heightHeaderFooter: 80px;
+}
+
+main {
+  margin: 2rem;
+  min-height: calc(100vh - calc(var(--heightHeaderFooter) * 2));
+}
+
+header {
+  height: var(--heightHeaderFooter);
+  background-color: rgba(0, 0, 0, 25%);
+  margin: 0;
+}
+
+footer {
+  height: var(--heightHeaderFooter);
+  background-color: rgba(0, 0, 0, 25%);
+}
+
+#categoryContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.categorySelector {
+  cursor: pointer;
+}
+
+#categoryContainer * {
+  width: 125px;
+  padding: 1.5rem;
+  margin: 1rem;
+  text-align: center;
+}
+
+.activeCategory {
+  border: 2px solid red;
+  /* background-color: blue; */
+}
+
+#productsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
