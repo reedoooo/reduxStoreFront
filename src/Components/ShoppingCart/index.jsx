@@ -11,6 +11,7 @@ import {
 import { DatePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useSelector } from 'react-redux';
 
 // Create a new subcomponent to reduce code repetition for TextFields
 function CustomTextField({ id = 'outlined', label, type }) {
@@ -19,6 +20,11 @@ function CustomTextField({ id = 'outlined', label, type }) {
 
 function ShoppingCart() {
   let { state } = useLocation();
+  const isCartVisible = useSelector((storefrontState) => storefrontState.cart.cartVisible);
+
+  if (!isCartVisible) {
+    return null;
+  }
 
   const totalAmount = state.cart.items.reduce(
     (acc, current) => acc + current.price * current.quantity,

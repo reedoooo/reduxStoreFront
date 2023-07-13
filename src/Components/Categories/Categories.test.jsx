@@ -1,50 +1,57 @@
-import Categories from './index';
-import { Provider } from "react-redux";
-import { applyMiddleware, createStore } from "redux";
-import storefrontReducer from '../../store';
-import { render, screen, fireEvent, act } from '@testing-library/react';
-import thunk from 'redux-thunk';
-// import userEvent from "@testing-library/user-event";
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+import Categories from './Categories';
+import categoriesSlice from '../../store/categories';
 
-describe('Testing Categories component...', () => {
+describe('Categories', () => {
+  let store;
 
-  test('Categories component should be visible', () => {
-    const store = createStore(storefrontReducer, applyMiddleware(thunk));
-    let categoryState = store.getState().categories;
+  beforeEach(() => {
+    store = configureStore({
+      reducer: {
+        categories: categoriesSlice,
+      },
+    });
+    store.dispatch = jest.fn();
+  });
 
+  it('renders without crashing', () => {
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <Categories />
+      </Provider>
+    );
+
+    expect(getByTestId('categoryContainer')).toBeInTheDocument();
+  });
+
+  it('loads categories on mount', () => {
     render(
       <Provider store={store}>
-        <Categories categories={categoryState.categories}/>
+        <Categories />
       </Provider>
-    )
+    );
 
-    expect(screen.getByTestId('paper_food')).toBeVisible();
-    expect(screen.getByTestId('paper_accessories')).toBeVisible();
-  })
+    expect(store.dispatch).toHaveBeenCalledWith(
+      expect.any(Function)
+    );
+  });
 
-  test('Simulating changing active category', () => {
-    const store = createStore(storefrontReducer, applyMiddleware(thunk));
-    let categoryState = store.getState().categories;
-
-    render(
+  it('dispatches the changeActiveCategory action when a category is clicked', () => {
+    const { getByTestId } = render(
       <Provider store={store}>
-        <Categories categories={categoryState.categories}/>
+        <Categories />
       </Provider>
-    )
-    
-    act(() => store.dispatch({
-      type:'SET_ACTIVECATEGORY',
-      payload: 'food'
-    }))
+    );
 
-    expect(store.getState().categories.activeCategory.name).toBe('food')
+    fireEvent.click(getByTestId('paper_someCategory'));
 
-    act(() => store.dispatch({
-      type:'SET_ACTIVECATEGORY',
-      payload: ''
-    }))
+    expect(store.dispatch).toHaveBeenCalledWith(
+      categoriesSlice.actions.changeActiveCategory('someCategory')
+    );
+  });
 
-    expect(store.getState().categories.activeCategory?.name).toBeFalsy();
-  })
-
-})
+  // Add more tests as necessary...
+});

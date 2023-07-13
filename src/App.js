@@ -5,6 +5,7 @@ import TopBar from './Components/Header';
 import BottomBar from './Components/Footer';
 import ShopFront from './Components/Storefront';
 import Cart from './Components/ShoppingCart';
+
 import { configureStore as createStoreWithReducer } from '@reduxjs/toolkit';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
