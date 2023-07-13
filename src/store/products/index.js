@@ -13,6 +13,7 @@ export const addProductToCart = (productId) => async () => {
     `http://localhost:3001/api/products/${productId}`
   );
   const productDetails = await apiResponse.json();
+  console.log('store, products, productDetails', productDetails);
 
   // Check if product is available in stock
   if (productDetails.inStock <= 0) {
@@ -42,7 +43,7 @@ export const addProductToDatabase = (productData) => async () => {
   });
 
   const data = await response.json();
-  console.log(data);
+  console.log('store, products, data', data);
 };
 
 

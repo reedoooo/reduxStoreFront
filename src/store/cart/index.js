@@ -77,20 +77,26 @@ const cartSlice = createSlice({
       let targetItem = currentItems.find(
         (item) => item.name === action.payload.product.name
       );
-      targetItem.quantity += action.payload.quantityChange;
+      // Check if targetItem is defined
+      if (targetItem) {
+        targetItem.quantity += action.payload.quantityChange;
 
-      if (targetItem.quantity === 0) {
-        currentItems = state.products.filter(
-          (item) => item.name !== action.payload.product.name
+        if (targetItem.quantity === 0) {
+          currentItems = state.products.filter(
+            (item) => item.name !== action.payload.product.name
+          );
+        }
+
+        let updatedTotal = currentItems.reduce(
+          (acc, current) => acc + current.price * current.quantity,
+          0
         );
+        state.products = currentItems;
+        state.totalAmount = updatedTotal;
+      } else {
+        // Handle the case where the target item isn't found
+        console.warn(`Item ${action.payload.product.name} not found in cart`);
       }
-
-      let updatedTotal = currentItems.reduce(
-        (acc, current) => acc + current.price * current.quantity,
-        0
-      );
-      state.products = currentItems;
-      state.totalAmount = updatedTotal;
     },
     toggleCartVisibility(state) {
       state.cartVisible = !state.cartVisible;
@@ -102,7 +108,7 @@ export const {
   addProductToCart,
   removeProductFromCart,
   changeProductQuantity,
-  toggleCartVisibility
+  toggleCartVisibility,
 } = cartSlice.actions;
 
 export default cartSlice;

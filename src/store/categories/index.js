@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const retrieveCategories = () => async () => {
   const serverResponse = await fetch('http://localhost:3001/api/categories');
   const categoriesData = await serverResponse.json();
+  console.log('store, categories, categoriesData', categoriesData);
 
   return categoriesData;
 };
