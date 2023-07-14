@@ -13,7 +13,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Container as MuiContainer } from '@mui/material';
 import SingleProduct from './Components/ProductDetails';
 
-let shopStore = createStoreWithReducer({ reducer: shopReducer });
+let shopStore = createStoreWithReducer({
+  reducer: shopReducer,
+});
 
 const App = () => {
   return (

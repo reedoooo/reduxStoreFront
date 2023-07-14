@@ -5,9 +5,8 @@ import {
 } from 'react-redux';
 import { Box, Typography as TextUI, Paper as PaperUI } from '@mui/material';
 import { styled } from '@mui/system';
-// import categoriesSlice from '../../store/categories';
-// Add import of retrieveCategories
 import categoriesSlice, { retrieveCategories } from '../../store/categories';
+import { loadProductsFromAPI } from '../../store/products';
 
 const StyledPaper = styled(PaperUI)(({ theme }) => ({
   margin: theme.spacing(1),
@@ -28,28 +27,26 @@ function Categories() {
 
   const handleCategoryInteraction = (event) => {
     if (
-      event.target.innerText.toLowerCase() === categories.activeCategory.name
+      event.target.innerText.toLowerCase() === categories.selectedCategory.name
     ) {
       dispatch(resetActiveCategory({}));
-      let categorySelectors = document.getElementsByClassName('activeCategory');
+      let categorySelectors =
+        document.getElementsByClassName('selectedCategory');
       for (let i = 0; i < categorySelectors.length; i++) {
-        categorySelectors[i].classList.remove('activeCategory');
+        categorySelectors[i].classList.remove('selectedCategory');
       }
     } else {
       dispatch(changeActiveCategory(event.target.innerText));
-      let categorySelectors = document.getElementsByClassName('activeCategory');
+      let categorySelectors =
+        document.getElementsByClassName('selectedCategory');
       for (let i = 0; i < categorySelectors.length; i++) {
-        categorySelectors[i].classList.remove('activeCategory');
+        categorySelectors[i].classList.remove('selectedCategory');
       }
-      event.target.classList.add('activeCategory');
+      event.target.classList.add('selectedCategory');
+      dispatch(loadProductsFromAPI());
     }
   };
 
-  // startEffect(() => {
-  //   dispatch(categoriesSlice.retrieveCategories()).then((response) =>
-  //     dispatch(loadCategories(response))
-  //   );
-  // }, []);
   startEffect(() => {
     dispatch(retrieveCategories()).then((response) =>
       dispatch(loadCategories(response))
@@ -65,6 +62,11 @@ function Categories() {
         component="div"
         id="categoryContainer"
         data-testid="categoryContainer"
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', // adapt this to your needs
+          gridGap: '1em',
+        }}
       >
         {categories.categories.map((category) => {
           return (

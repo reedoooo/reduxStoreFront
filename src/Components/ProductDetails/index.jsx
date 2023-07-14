@@ -11,13 +11,10 @@ import {
   Button as ButtonElement,
   styled,
 } from '@mui/material';
-import { addProductToCart } from '../../store/products'; // Changed the import
-import { adjustStockOnServer } from '../../store/cart'; // Changed the import
-import cartDataSlice from '../../store/cart';
-import {
-  useSelector as useStoreSelector,
-  useDispatch as useActionDispatcher,
-} from 'react-redux';
+// import { addProductToCart, adjustStockOnServer, changeProductQuantity } from '../../store/cart';
+import { addProductToCart, changeProductQuantity } from '../../store/cart';
+import { useDispatch as useActionDispatcher, useSelector as useStoreSelector } from 'react-redux';
+
 
 const CustomCard = styled(CardElement)(({ theme }) => ({
   width: '45%',
@@ -29,18 +26,40 @@ const CustomCard = styled(CardElement)(({ theme }) => ({
 function ProductDetails() {
   const cartData = useStoreSelector((storefrontState) => storefrontState.cart);
   let { state } = usePageLocation();
-  let { addToCart } = cartDataSlice.actions;
   const dispatcher = useActionDispatcher();
-
   const handleAddProductToCart = (product) => {
-    if (!cartData.items.find((item) => item._id === product._id)) {
-      dispatcher(addProductToCart(product._id)).then(
-        dispatcher(addToCart(product))
-      );
+    console.log('handleAddProductToCart - product: ', product);
+
+    if (!product || typeof product !== 'object') {
+      console.error('Invalid product');
+      return;
+    }
+
+    const productInCart = cartData.items?.find(
+      (item) => item._id === product._id
+    );
+
+    if (!productInCart) {
+      // Add the product to the cart before changing the quantity
+      dispatcher(addProductToCart(product));
+      dispatcher(changeProductQuantity({ id: product._id, quantityChange: 1 }));
     } else {
-      dispatcher(adjustStockOnServer(product, 1));
+      const quantityChange = 1;
+      dispatcher(changeProductQuantity({ id: product._id, quantityChange }));
     }
   };
+
+
+  // const handleAddProductToCart = (product) => {
+  //   console.log('raw product: ', product);
+  //   const productInCart = cartData.products.find((item) => item._id === product._id);
+  //   console.log('handleAddProductToCart - productInCart: ', productInCart);
+  //   if (!productInCart) {
+  //     dispatcher(adjustStockOnServer({ id: product._id, quantityChange: -1 }));
+  //   } else {
+  //     dispatcher(changeProductQuantity({ id: product._id, quantityChange: 1 }));
+  //   }
+  // };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -82,68 +101,3 @@ function ProductDetails() {
 }
 
 export default ProductDetails;
-
-// import React from "react";
-// import { useLocation } from "react-router";
-// import { Card, CardActions, CardContent, CardHeader, Typography, CardMedia, Box, Button } from "@mui/material";
-// import { addItemToCart } from "../../store/products";
-// import { modifyServerSideStock } from "../../store/cart";
-// import cartSlice from "../../store/cart";
-// import { useSelector, useDispatch } from "react-redux";
-
-// function ProductDetails(props) {
-
-//   const cartState = useSelector(storefrontState => storefrontState.cart);
-//   let { state } = useLocation();
-//   let { addToCart } = cartSlice.actions;
-//   const dispatch = useDispatch();
-
-//   const handleAddToCart = (product) => {
-//     // if product IS NOT in cart, add it to cart
-//     if (!cartState.items.find(item => item._id === product._id)) {
-//       dispatch(addItemToCart(product._id))
-//       .then(dispatch(addToCart(product)));
-//     }
-//     // otherwise, the product IS in the cart and we need to update the quantity of the item
-//     else {
-//       dispatch(modifyServerSideStock(product, 1));
-//     }
-//   }
-
-//   return(
-//     <div style={{display: 'flex', justifyContent: 'space-between'}}>
-//       <Card sx={{width: '45%', height: '100%', alignSelf: 'center'}}>
-//         <CardHeader title={state.product.name} subheader={state.product.category} />
-//         <CardMedia
-//           sx={{height: 400, margin: '1rem'}}
-//           image='https://placehold.co/500.png'
-//         />
-//         <CardContent sx={{display: 'flex', justifyContent: 'space-between'}}>
-//           <Typography variant="h6" sx={{color: 'grey'}}>
-//             {`In Stock: ${state.product.inStock}`}
-//           </Typography>
-//           <Typography variant="h6">
-//             {`$${state.product.price}`}
-//           </Typography>
-//         </CardContent>
-//         <CardActions sx={{justifyContent: 'center'}}>
-//           {state.product.inStock > 0 ?
-//             <Button variant="contained" onClick={() => handleAddToCart(state.product)} sx={{width: '100%'}}>
-//               {`Add To Cart`}
-//             </Button>
-//           :
-//             <Button disabled >Out of Stock</Button>
-//           }
-//         </CardActions>
-//       </Card>
-//       <Box sx={{width: '45%'}}>
-//         <p>Reviews: </p> {/* import Rating from Material UI */}
-//         <p>Related Products: </p> {/* use cards? accordion? */}
-//       </Box>
-//     </div>
-
-//   )
-
-// }
-
-// export default ProductDetails;

@@ -12,8 +12,12 @@ import {
   Button,
   styled,
 } from '@mui/material';
-import { loadProductsFromAPI, addProductToCart } from '../../store/products';
-import { changeProductQuantity } from '../../store/cart';
+import { loadProductsFromAPI } from '../../store/products';
+import {
+  addProductToCart,
+  changeProductQuantity,
+  removeProductFromCart,
+} from '../../store/cart';
 
 const CustomCard = styled(Card)(({ theme }) => ({
   width: 300,
@@ -31,109 +35,103 @@ function Products() {
   );
   const cartData = useSelector((storefrontState) => storefrontState.cart);
   const dispatch = useDispatch();
-
   const handleAddProductToCart = (product) => {
-    if (!cartData.items.find((item) => item._id === product._id)) {
-      dispatch(addProductToCart(product._id)); // modified here
+    console.log('handleAddProductToCart - product: ', product);
+
+    if (!product || typeof product !== 'object') {
+      console.error('Invalid product');
+      return;
+    }
+
+    const productInCart = cartData.items?.find(
+      (item) => item._id === product._id
+    );
+
+    if (!productInCart) {
+      // Add the product to the cart before changing the quantity
+      dispatch(addProductToCart(product));
+      dispatch(changeProductQuantity({ id: product._id, quantityChange: 1 }));
     } else {
-      dispatch(changeProductQuantity(product, 1));
+      const quantityChange = 1;
+      dispatch(changeProductQuantity({ id: product._id, quantityChange }));
     }
   };
 
+  // In your Products function, add the removeProductFromCart handler
+  const handleRemoveProductFromCart = (product) => {
+    console.log('handleRemoveProductFromCart - product: ', product);
+
+    if (!product || typeof product !== 'object') {
+      console.error('Invalid product');
+      return;
+    }
+
+    dispatch(removeProductFromCart(product));
+  };
   useEffect(() => {
-    dispatch(loadProductsFromAPI()); // you don't need to dispatch setAllProducts here anymore
+    dispatch(loadProductsFromAPI());
   }, [dispatch]);
+
+  const renderProductCard = (product) => (
+    <CustomCard key={`${product.name}_card`}>
+      <CardHeader title={product.name} subheader={`$${product.price}`} />
+      <CardMedia sx={{ height: 100 }} image="https://placehold.co/200.png" />
+      <CardContent>
+        <Text variant="body2">{product.description}</Text>
+      </CardContent>
+      <CardActions>
+        {product.inStock > 0 ? (
+          <Button
+            variant="contained"
+            onClick={() => handleAddProductToCart(product)}
+          >
+            Add To Cart
+          </Button>
+        ) : (
+          <Button disabled variant="contained">
+            Sold Out
+          </Button>
+        )}
+        {product.inStock > 0 ? (
+          <Button
+            variant="contained"
+            onClick={() => handleRemoveProductFromCart(product)}
+          >
+            Remove From Cart
+          </Button>
+        ) : (
+          <Button disabled variant="contained">
+            Cannot Remove
+          </Button>
+        )}
+        <Button variant="contained">
+          <RouterLink
+            to={`/products/${product?._id}`}
+            style={{ textDecoration: 'none' }}
+            state={{ product: product }}
+          >
+            More Details
+          </RouterLink>
+        </Button>
+      </CardActions>
+    </CustomCard>
+  );
+
+  const productList = categoryData.selectedCategory?.name
+    ? productData.productList.flatMap((listItem) =>
+      listItem.products.filter(
+        (product) => product.category === categoryData.selectedCategory.name
+      )
+    )
+    : productData.productList.flatMap((listItem) => listItem.products);
 
   return (
     <Container id="productListingContainer">
-      {categoryData.activeCategory && categoryData.activeCategory.name
-        ? productData.productList // modified here
-          ? productData.productList.map((product) => { // modified here
-            if (product.category === categoryData.activeCategory.name) {
-              return (
-                <CustomCard key={`${product.name}_card`}>
-                  <CardHeader
-                    title={product.name}
-                    subheader={`$${product.price}`}
-                  />
-                  <CardMedia
-                    sx={{ height: 100 }}
-                    image="https://placehold.co/200.png"
-                  />
-                  <CardContent>
-                    <Text variant="body2">{product.description}</Text>
-                  </CardContent>
-                  <CardActions>
-                    {product.inStock > 0 ? (
-                      <Button
-                        variant="contained"
-                        onClick={() => handleAddProductToCart(product)}
-                      >
-                          Add To Basket
-                      </Button>
-                    ) : (
-                      <Button disabled variant="contained">
-                          Sold Out
-                      </Button>
-                    )}
-                    <Button variant="contained">
-                      <RouterLink
-                        to={`/products/${product?._id}`}
-                        style={{ textDecoration: 'none' }}
-                        state={{ product: product }}
-                      >
-                          More Details
-                      </RouterLink>
-                    </Button>
-                  </CardActions>
-                </CustomCard>
-              );
-            }
-            return null;
-          })
-          : null
-        : productData.productList // modified here
-          ? productData.productList.map((product) => { // modified here
-            return (
-              <CustomCard key={`${product.name}_card`}>
-                <CardHeader
-                  title={product.name}
-                  subheader={`$${product.price}`}
-                />
-                <CardMedia
-                  sx={{ height: 100 }}
-                  image="https://placehold.co/200.png"
-                />
-                <CardContent>
-                  <Text variant="body2">{product.description}</Text>
-                </CardContent>
-                <CardActions>
-                  {product.inStock > 0 ? (
-                    <Button
-                      variant="contained"
-                      onClick={() => handleAddProductToCart(product)}
-                    >
-                      Add To Basket
-                    </Button>
-                  ) : (
-                    <Button disabled variant="contained">
-                      Sold Out
-                    </Button>
-                  )}
-                  <Button variant="contained">
-                    <RouterLink
-                      to={`/products/${product?._id}`}
-                      style={{ textDecoration: 'none' }}
-                      state={{ product: product }}
-                    >
-                      More Details
-                    </RouterLink>
-                  </Button>
-                </CardActions>
-              </CustomCard>
-            );
-          })
-          : null}
+      {productList.map((product, index) => (
+        <React.Fragment key={product._id || index}>
+          {renderProductCard(product)}
+        </React.Fragment>
+      ))}
     </Container>
   );
 }
