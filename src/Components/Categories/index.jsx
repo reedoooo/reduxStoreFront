@@ -1,5 +1,8 @@
 import React, { useEffect as startEffect } from 'react';
-import { useSelector as selectState, useDispatch as dispatchAction } from 'react-redux';
+import {
+  useSelector as selectState,
+  useDispatch as dispatchAction,
+} from 'react-redux';
 import { Box, Typography as TextUI, Paper as PaperUI } from '@mui/material';
 import { styled } from '@mui/system';
 import categoriesSlice, { retrieveCategories } from '../../store/categories';
@@ -27,13 +30,15 @@ function Categories() {
       event.target.innerText.toLowerCase() === categories.selectedCategory.name
     ) {
       dispatch(resetActiveCategory({}));
-      let categorySelectors = document.getElementsByClassName('selectedCategory');
+      let categorySelectors =
+        document.getElementsByClassName('selectedCategory');
       for (let i = 0; i < categorySelectors.length; i++) {
         categorySelectors[i].classList.remove('selectedCategory');
       }
     } else {
       dispatch(changeActiveCategory(event.target.innerText));
-      let categorySelectors = document.getElementsByClassName('selectedCategory');
+      let categorySelectors =
+        document.getElementsByClassName('selectedCategory');
       for (let i = 0; i < categorySelectors.length; i++) {
         categorySelectors[i].classList.remove('selectedCategory');
       }
@@ -57,6 +62,11 @@ function Categories() {
         component="div"
         id="categoryContainer"
         data-testid="categoryContainer"
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', // adapt this to your needs
+          gridGap: '1em',
+        }}
       >
         {categories.categories.map((category) => {
           return (
