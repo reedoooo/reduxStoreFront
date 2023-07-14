@@ -71,6 +71,25 @@ export const addProductToDatabase = (productData) => async () => {
   console.log('store, products, data', data);
 };
 
+// Asynchronously delete product from server-side database
+export const deleteProductFromDatabase = (productId) => async () => {
+  try {
+    // Send a DELETE request to remove the product from the server
+    const response = await fetch(`http://localhost:3001/api/products/${productId.toString()}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    console.log('store, products, product deleted successfully');
+  } catch (error) {
+    console.error('Deleting product failed: ', error);
+  }
+};
+
+
 // Create a Redux slice for product operations
 const productSlice = createSlice({
   name: 'productData',

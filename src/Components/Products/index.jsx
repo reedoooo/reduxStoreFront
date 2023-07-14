@@ -12,10 +12,12 @@ import {
   Button,
   styled,
 } from '@mui/material';
+import { loadProductsFromAPI } from '../../store/products';
 import {
-  loadProductsFromAPI,
-} from '../../store/products';
-import { changeProductQuantity } from '../../store/cart';
+  addProductToCart,
+  changeProductQuantity,
+  removeProductFromCart,
+} from '../../store/cart';
 
 const CustomCard = styled(Card)(({ theme }) => ({
   width: 300,
@@ -33,7 +35,6 @@ function Products() {
   );
   const cartData = useSelector((storefrontState) => storefrontState.cart);
   const dispatch = useDispatch();
-
   const handleAddProductToCart = (product) => {
     console.log('handleAddProductToCart - product: ', product);
 
@@ -47,6 +48,8 @@ function Products() {
     );
 
     if (!productInCart) {
+      // Add the product to the cart before changing the quantity
+      dispatch(addProductToCart(product));
       dispatch(changeProductQuantity({ id: product._id, quantityChange: 1 }));
     } else {
       const quantityChange = 1;
@@ -54,6 +57,17 @@ function Products() {
     }
   };
 
+  // In your Products function, add the removeProductFromCart handler
+  const handleRemoveProductFromCart = (product) => {
+    console.log('handleRemoveProductFromCart - product: ', product);
+
+    if (!product || typeof product !== 'object') {
+      console.error('Invalid product');
+      return;
+    }
+
+    dispatch(removeProductFromCart(product));
+  };
   useEffect(() => {
     dispatch(loadProductsFromAPI());
   }, [dispatch]);
@@ -71,11 +85,23 @@ function Products() {
             variant="contained"
             onClick={() => handleAddProductToCart(product)}
           >
-            Add To Basket
+            Add To Cart
           </Button>
         ) : (
           <Button disabled variant="contained">
             Sold Out
+          </Button>
+        )}
+        {product.inStock > 0 ? (
+          <Button
+            variant="contained"
+            onClick={() => handleRemoveProductFromCart(product)}
+          >
+            Remove From Cart
+          </Button>
+        ) : (
+          <Button disabled variant="contained">
+            Cannot Remove
           </Button>
         )}
         <Button variant="contained">
@@ -101,7 +127,11 @@ function Products() {
 
   return (
     <Container id="productListingContainer">
-      {productList.map(renderProductCard)}
+      {productList.map((product, index) => (
+        <React.Fragment key={product._id || index}>
+          {renderProductCard(product)}
+        </React.Fragment>
+      ))}
     </Container>
   );
 }

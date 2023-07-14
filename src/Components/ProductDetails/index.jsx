@@ -11,8 +11,8 @@ import {
   Button as ButtonElement,
   styled,
 } from '@mui/material';
-// import { addProductToCart } from '../../store/products';
-import { adjustStockOnServer, changeProductQuantity } from '../../store/cart';
+// import { addProductToCart, adjustStockOnServer, changeProductQuantity } from '../../store/cart';
+import { addProductToCart, changeProductQuantity } from '../../store/cart';
 import { useDispatch as useActionDispatcher, useSelector as useStoreSelector } from 'react-redux';
 
 
@@ -27,17 +27,39 @@ function ProductDetails() {
   const cartData = useStoreSelector((storefrontState) => storefrontState.cart);
   let { state } = usePageLocation();
   const dispatcher = useActionDispatcher();
-
   const handleAddProductToCart = (product) => {
-    console.log('raw product: ', product);
-    const productInCart = cartData.products.find((item) => item._id === product._id);
-    console.log('handleAddProductToCart - productInCart: ', productInCart);
+    console.log('handleAddProductToCart - product: ', product);
+
+    if (!product || typeof product !== 'object') {
+      console.error('Invalid product');
+      return;
+    }
+
+    const productInCart = cartData.items?.find(
+      (item) => item._id === product._id
+    );
+
     if (!productInCart) {
-      dispatcher(adjustStockOnServer({ id: product._id, quantityChange: -1 }));
-    } else {
+      // Add the product to the cart before changing the quantity
+      dispatcher(addProductToCart(product));
       dispatcher(changeProductQuantity({ id: product._id, quantityChange: 1 }));
+    } else {
+      const quantityChange = 1;
+      dispatcher(changeProductQuantity({ id: product._id, quantityChange }));
     }
   };
+
+
+  // const handleAddProductToCart = (product) => {
+  //   console.log('raw product: ', product);
+  //   const productInCart = cartData.products.find((item) => item._id === product._id);
+  //   console.log('handleAddProductToCart - productInCart: ', productInCart);
+  //   if (!productInCart) {
+  //     dispatcher(adjustStockOnServer({ id: product._id, quantityChange: -1 }));
+  //   } else {
+  //     dispatcher(changeProductQuantity({ id: product._id, quantityChange: 1 }));
+  //   }
+  // };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
