@@ -1,41 +1,73 @@
 {
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true,
+    "node": true,
+    "commonjs": true,
+    "jquery": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "prettier",
+    "plugin:react-hooks/recommended"
+  ],
   "globals": {
+    "fail": true,
     "Mustache": true,
     "$": true,
     "React": true,
     "ReactDOM": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
-  ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2021,
     "sourceType": "module",
+    "ecmaVersion": 2021,
     "ecmaFeatures": {
       "jsx": true
     }
   },
-  "env": {
-    "browser": true,
-    "es6": true,
-    "jest": true,
-    "jquery": true,
-    "node": true
-  },
+  "plugins": ["react", "@typescript-eslint", "prettier", "prettier-eslint"],
   "rules": {
-    "eol-last": "error",
-    "eqeqeq": [
-      "error",
-      "always"
-    ],
+    "no-console": "off",
     "indent": [
       "error",
-      2
+      2,
+      {
+        "CallExpression": {
+          "arguments": "first"
+        },
+        "FunctionDeclaration": {
+          "parameters": "first"
+        },
+        "FunctionExpression": {
+          "parameters": "first"
+        },
+        "offsetTernaryExpressions": true
+      }
     ],
+    "linebreak-style": ["error", "unix"],
+    "quotes": [
+      "error",
+      "single",
+      { "avoidEscape": true, "allowTemplateLiterals": true }
+    ],
+    "semi": ["error", "always"],
+    "no-unused-vars": [1, { "vars": "local", "args": "none" }],
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "parser": "flow"
+      }
+    ],
+    "eol-last": "error",
+    "eqeqeq": ["error", "always"],
     "new-cap": "warn",
-    "no-console": "off",
     "no-multi-spaces": [
       "warn",
       {
@@ -52,16 +84,7 @@
     ],
     "no-template-curly-in-string": "error",
     "no-trailing-spaces": "warn",
-    "no-undefined": "off",
-    "quotes": [
-      "warn",
-      "single",
-      {
-        "allowTemplateLiterals": true
-      }
-    ],
-    "semi": "error",
-    "react/prop-types": "off"
+    "no-undefined": "off"
   },
   "settings": {
     "react": {
