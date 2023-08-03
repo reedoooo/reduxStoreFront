@@ -4,35 +4,32 @@
     "es6": true,
     "jest": true,
     "node": true,
-    "commonjs": true,
-    "jquery": true
+    "commonjs": true
   },
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
     "prettier",
-    "plugin:react-hooks/recommended"
+    "prettier/react",
+    "prettier/@typescript-eslint"
   ],
   "globals": {
-    "fail": true,
-    "Mustache": true,
-    "$": true,
-    "React": true,
-    "ReactDOM": true
+    "fail": true
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "ecmaVersion": 2018,
     "sourceType": "module",
-    "ecmaVersion": 2021,
     "ecmaFeatures": {
       "jsx": true
     }
   },
-  "plugins": ["react", "@typescript-eslint", "prettier", "prettier-eslint"],
+  "plugins": ["react", "@typescript-eslint"],
   "rules": {
     "no-console": "off",
-    "indent": [
+    "indent": ["error", 2],
+    "@typescript-eslint/indent": [
       "error",
       2,
       {
@@ -49,42 +46,12 @@
       }
     ],
     "linebreak-style": ["error", "unix"],
-    "quotes": [
-      "error",
-      "single",
-      { "avoidEscape": true, "allowTemplateLiterals": true }
-    ],
+    "quotes": ["error", "single", { "avoidEscape": true }],
     "semi": ["error", "always"],
-    "no-unused-vars": [1, { "vars": "local", "args": "none" }],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
     "react/react-in-jsx-scope": "off",
-    "react/prop-types": "off",
-    "prettier/prettier": [
-      "error",
-      {
-        "singleQuote": true,
-        "parser": "flow"
-      }
-    ],
-    "eol-last": "error",
-    "eqeqeq": ["error", "always"],
-    "new-cap": "warn",
-    "no-multi-spaces": [
-      "warn",
-      {
-        "exceptions": {
-          "VariableDeclarator": true
-        }
-      }
-    ],
-    "no-redeclare": [
-      "error",
-      {
-        "builtinGlobals": true
-      }
-    ],
-    "no-template-curly-in-string": "error",
-    "no-trailing-spaces": "warn",
-    "no-undefined": "off"
+    "react/prop-types": "off"
   },
   "settings": {
     "react": {

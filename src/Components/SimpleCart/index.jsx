@@ -1,11 +1,33 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Drawer, Button, Typography, Container, Box } from '@mui/material';
+import {
+  Drawer,
+  Button,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+  styled,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import cartSlice, {
   adjustStockOnServer as modifyServerSideStock,
   replenishStockInServer as reStockServer,
 } from '../../store/cart';
+
+const StyledDrawer = styled(Drawer)({
+  '.MuiDrawer-paper': {
+    width: '30%',
+  },
+});
+
+const StyledCard = styled(Card)({
+  margin: '1rem',
+});
+
+const StyledButton = styled(Button)({
+  margin: '0.5rem',
+});
 
 function SimpleCart() {
   const { toggleCartVisibility, removeProductFromCart, changeProductQuantity } =
@@ -24,7 +46,14 @@ function SimpleCart() {
   };
 
   const handleModifyItemInCart = async (event, product) => {
-    const quantityChange = parseInt(event.target.value);
+    let quantityChange = parseInt(event.target.value);
+
+    // Make sure the value is either 1 or -1
+    if (quantityChange > 1) {
+      quantityChange = 1;
+    } else if (quantityChange < -1) {
+      quantityChange = -1;
+    }
 
     try {
       await dispatch(modifyServerSideStock(product, quantityChange)).unwrap();
@@ -32,7 +61,7 @@ function SimpleCart() {
         changeProductQuantity({
           product,
           quantityChange: quantityChange,
-        })
+        }),
       );
     } catch (error) {
       console.error('Failed to adjust stock on server: ', error);
@@ -45,75 +74,75 @@ function SimpleCart() {
 
   return (
     <React.Fragment>
-      <Drawer
+      <StyledDrawer
         anchor="right"
         open={cartState.cartVisible}
         onClose={handleToggleCart}
-        PaperProps={{
-          sx: {
-            width: '15%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-          },
-        }}
       >
         <div>
           {cartState.products &&
-            cartState.products.map((item) => (
-              <Container
-                key={item._id}
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  marginBottom: '1rem',
-                }}
-              >
-                <Typography variant="overline">
-                  {item.name} x {item.quantity}
-                </Typography>
+            cartState.products.map(
+              (item, index) => (
+                console.log('item: ', item),
+                (
+                  <StyledCard key={item.key || index}>
+                    <CardContent
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Typography variant="body1">
+                        {item.name} x {item.quantity}
+                      </Typography>
 
-                <Box
-                  sx={{
-                    display: 'flex',
-                    width: '100%',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => handleRemoveItem(item)}
-                  >
-                    Remove
-                  </Button>
-                  <Box>
-                    <Button
-                      variant="contained"
-                      value={1}
-                      onClick={(event) => handleModifyItemInCart(event, item)}
-                    >
-                      +
-                    </Button>
-                    <Button
-                      variant="contained"
-                      value={-1}
-                      onClick={(event) => handleModifyItemInCart(event, item)}
-                    >
-                      -
-                    </Button>
-                  </Box>
-                </Box>
-              </Container>
-            ))}
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <StyledButton
+                          variant="contained"
+                          color="error"
+                          onClick={() => handleRemoveItem(item)}
+                        >
+                          Remove
+                        </StyledButton>
+                        <Box>
+                          <StyledButton
+                            variant="contained"
+                            value={1}
+                            onClick={(event) =>
+                              handleModifyItemInCart(event, item)
+                            }
+                          >
+                            +
+                          </StyledButton>
+                          <StyledButton
+                            variant="contained"
+                            value={-1}
+                            onClick={(event) =>
+                              handleModifyItemInCart(event, item)
+                            }
+                          >
+                            -
+                          </StyledButton>
+                        </Box>
+                      </Box>
+                    </CardContent>
+                  </StyledCard>
+                )
+              ),
+            )}
         </div>
 
         <Button
           variant="contained"
           onClick={() => {
             console.log(
-              'https://imgflip.com/s/meme/Shut-Up-And-Take-My-Money-Fry.jpg'
+              'https://imgflip.com/s/meme/Shut-Up-And-Take-My-Money-Fry.jpg',
             );
           }}
           style={{ padding: '0' }}
@@ -131,12 +160,14 @@ function SimpleCart() {
               </Typography>
               <Typography align="center" variant="caption">
                 SubTotal: $
-                {cartState.totalAmount ? cartState.totalAmount.toFixed(2) : '0.00'}
+                {cartState.totalAmount
+                  ? cartState.totalAmount.toFixed(2)
+                  : '0.00'}
               </Typography>
             </Box>
           </Link>
         </Button>
-      </Drawer>
+      </StyledDrawer>
     </React.Fragment>
   );
 }

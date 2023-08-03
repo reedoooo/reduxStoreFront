@@ -25,7 +25,7 @@ describe('SimpleCart', () => {
     component = render(
       <Provider store={store}>
         <SimpleCart />
-      </Provider>
+      </Provider>,
     );
   });
 

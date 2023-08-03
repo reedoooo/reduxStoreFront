@@ -49,7 +49,7 @@ function Categories() {
 
   startEffect(() => {
     dispatch(retrieveCategories()).then((response) =>
-      dispatch(loadCategories(response))
+      dispatch(loadCategories(response)),
     );
   }, []);
 

@@ -37,9 +37,9 @@ function Header() {
             {`Basket (${
               cartState.items
                 ? cartState.items.reduce(
-                  (acc, current) => acc + current.quantity,
-                  0
-                )
+                    (acc, current) => acc + current.quantity,
+                    0,
+                  )
                 : 0
             })`}
           </Button>
