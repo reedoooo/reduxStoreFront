@@ -8,9 +8,7 @@
 // import { act } from "react-dom/test-utils";
 
 describe('Testing storefront...', () => {
-
   test('Previous tests were more appropriate for unit testing, this is a placeholder so github actions will pass', () => {
-    console.log('yo')
-  })
-
-})
+    console.log('yo');
+  });
+});

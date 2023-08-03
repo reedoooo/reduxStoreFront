@@ -21,7 +21,7 @@ describe('Categories', () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <Categories />
-      </Provider>
+      </Provider>,
     );
 
     expect(getByTestId('categoryContainer')).toBeInTheDocument();
@@ -31,25 +31,23 @@ describe('Categories', () => {
     render(
       <Provider store={store}>
         <Categories />
-      </Provider>
+      </Provider>,
     );
 
-    expect(store.dispatch).toHaveBeenCalledWith(
-      expect.any(Function)
-    );
+    expect(store.dispatch).toHaveBeenCalledWith(expect.any(Function));
   });
 
   it('dispatches the changeActiveCategory action when a category is clicked', () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <Categories />
-      </Provider>
+      </Provider>,
     );
 
     fireEvent.click(getByTestId('paper_someCategory'));
 
     expect(store.dispatch).toHaveBeenCalledWith(
-      categoriesSlice.actions.changeActiveCategory('someCategory')
+      categoriesSlice.actions.changeActiveCategory('someCategory'),
     );
   });
 

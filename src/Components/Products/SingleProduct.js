@@ -20,7 +20,6 @@ import {
 const CustomCard = styled(CardElement)(({ theme }) => ({
   width: '45%',
   height: '100%',
-  alignSelf: 'center',
   boxShadow: theme.shadows[3],
 }));
 
@@ -28,6 +27,7 @@ function SingleProduct() {
   const cartData = useStoreSelector((storefrontState) => storefrontState.cart);
   let { state } = usePageLocation();
   const dispatcher = useActionDispatcher();
+
   const handleAddProductToCart = (product) => {
     console.log('handleAddProductToCart - product: ', product);
 
@@ -36,17 +36,13 @@ function SingleProduct() {
       return;
     }
 
-    // Generate unique key for each product
-    const uniqueProductId = `${product._id}_${Date.now()}_${Math.random()}`;
-    product._id = uniqueProductId;
-
     const productInCart = cartData.items?.find(
-      (item) => item._id === product._id,
+      (item) => item.key === product.key,
     );
-    console.log('handleAddProductToCart - productInCart: ', productInCart);
+
     if (!productInCart) {
       dispatcher(addProductToCart(product));
-      dispatcher(changeProductQuantity({ id: product._id, quantityChange: 1 }));
+      dispatcher(changeProductQuantity({ id: product.key, quantityChange: 1 }));
     } else {
       const quantityChange = 1;
       dispatcher(changeProductQuantity({ id: product._id, quantityChange }));
@@ -84,7 +80,14 @@ function SingleProduct() {
           )}
         </CardActions>
       </CustomCard>
-      <BoxElement sx={{ width: '45%' }}>
+      <BoxElement
+        sx={{
+          width: '45%',
+          padding: '1rem',
+          backgroundColor: '#f6f6f6',
+          boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+        }}
+      >
         <p>Ratings: </p>
         <p>Similar Items: </p>
       </BoxElement>

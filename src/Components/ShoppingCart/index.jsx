@@ -1,34 +1,91 @@
 import React from 'react';
-import { Card as CardElement, CardContent, Typography, Box, Button, TextField } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  Drawer,
+  Card as CardElement,
+  CardContent,
+  Typography,
+  Box,
+  Button,
+  TextField,
+} from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import cartSlice, {
+  adjustStockOnServer as modifyServerSideStock,
+  replenishStockInServer as reStockServer,
+} from '../../store/cart';
 
-// Create a new subcomponent to reduce code repetition for TextFields
 function CustomTextField({ id = 'outlined', label, type }) {
   return <TextField id={id} label={label} type={type} />;
 }
 
 function ShoppingCart() {
-  const cart = useSelector((state) => state.cart);
-  const isCartVisible = useSelector((storefrontState) => storefrontState.cart.cartVisible);
+  const { toggleCartVisibility, removeProductFromCart, changeProductQuantity } =
+    cartSlice.actions;
+  const cartState = useSelector((storefrontState) => storefrontState.cart);
+  const dispatch = useDispatch();
 
-  if (!isCartVisible) {
+  if (!cartState.cartVisible) {
     return null;
   }
 
-  const totalAmount = cart.items.reduce(
-    (acc, current) => acc + current.price * current.quantity,
-    0
-  );
+  const handleRemoveItem = async (product) => {
+    try {
+      await dispatch(reStockServer(product)).unwrap();
+      dispatch(removeProductFromCart(product));
+    } catch (error) {
+      console.error('Failed to replenish stock on server: ', error);
+    }
+  };
+
+  const handleModifyItemInCart = async (event, product) => {
+    let quantityChange = parseInt(event.target.value);
+
+    // Make sure the value is either 1 or -1
+    if (quantityChange > 1) {
+      quantityChange = 1;
+    } else if (quantityChange < -1) {
+      quantityChange = -1;
+    }
+
+    try {
+      await dispatch(modifyServerSideStock(product, quantityChange)).unwrap();
+      dispatch(
+        changeProductQuantity({
+          product,
+          quantityChange: quantityChange,
+        }),
+      );
+    } catch (error) {
+      console.error('Failed to adjust stock on server: ', error);
+    }
+  };
+
+  const handleToggleCart = () => {
+    dispatch(toggleCartVisibility());
+  };
 
   return (
-    <CardElement>
-      <CardContent>
-        {cart.items.map((item) => (
-          <Box key={`${item.name}_box`}>
-            <CardElement sx={{ margin: '0.5rem' }}>
+    <Drawer
+      anchor="right"
+      open={cartState.cartVisible}
+      onClose={handleToggleCart}
+      PaperProps={{
+        sx: {
+          width: '15%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        },
+      }}
+    >
+      <div>
+        {cartState.products &&
+          cartState.products.map((item, index) => (
+            <CardElement key={item.key || index} sx={{ margin: '0.5rem' }}>
               <CardContent
                 sx={{
                   display: 'flex',
@@ -36,79 +93,73 @@ function ShoppingCart() {
                   alignItems: 'center',
                 }}
               >
-                <Typography variant="body1">{item.name}</Typography>
-                <Typography variant="body1">{`$${item.price}`}</Typography>
-              </CardContent>
-            </CardElement>
-          </Box>
-        ))}
-        <Box>
-          <CardElement sx={{ margin: '0.5rem' }}>
-            <CardContent
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Typography variant="h6">Total</Typography>
-              <Typography variant="h6">{`$${totalAmount}`}</Typography>
-            </CardContent>
-          </CardElement>
-        </Box>
-        <Box sx={{ marginTop: '2rem' }}>
-          <Typography variant="h5" sx={{ marginBottom: '1rem' }}>
-            Customer Info
-          </Typography>
-          <form>
-            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Box>
-                  <CustomTextField label="First Name" />
-                  <CustomTextField label="Last Name" />
-                </Box>
-                <CustomTextField label="Street Address" />
-                <CustomTextField label="City" />
-                <CustomTextField label="State" />
-                <CustomTextField type="number" label="Zip" />
-              </Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <CustomTextField type="number" label="Card Number" />
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker />
-                  </LocalizationProvider>
-                  <CustomTextField type="number" label="CVV" />
-                </Box>
-                <Box sx={{ alignSelf: 'center' }}>
+                <Typography variant="body1">
+                  {item.name} x {item.quantity}
+                </Typography>
+
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }}
+                >
                   <Button
                     variant="contained"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      alert('Thank you for your purchase!');
-                    }}
+                    color="error"
+                    onClick={() => handleRemoveItem(item)}
                   >
-                    Submit Order
+                    Remove
                   </Button>
+                  <Box>
+                    <Button
+                      variant="contained"
+                      value={1}
+                      onClick={(event) => handleModifyItemInCart(event, item)}
+                    >
+                      +
+                    </Button>
+                    <Button
+                      variant="contained"
+                      value={-1}
+                      onClick={(event) => handleModifyItemInCart(event, item)}
+                    >
+                      -
+                    </Button>
+                  </Box>
                 </Box>
-              </Box>
-            </Box>
-          </form>
-        </Box>
-      </CardContent>
-    </CardElement>
+              </CardContent>
+            </CardElement>
+          ))}
+      </div>
+
+      <Button
+        variant="contained"
+        onClick={() => {
+          console.log(
+            'https://imgflip.com/s/meme/Shut-Up-And-Take-My-Money-Fry.jpg',
+          );
+        }}
+        style={{ padding: '0' }}
+      >
+        <Link
+          to="/cart"
+          style={{ width: '100%', padding: '0.5rem' }}
+          state={{ cart: cartState }}
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+            <Typography align="center" variant="button">
+              Checkout
+            </Typography>
+            <Typography align="center" variant="caption">
+              SubTotal: $
+              {cartState.totalAmount
+                ? cartState.totalAmount.toFixed(2)
+                : '0.00'}
+            </Typography>
+          </Box>
+        </Link>
+      </Button>
+    </Drawer>
   );
 }
 
