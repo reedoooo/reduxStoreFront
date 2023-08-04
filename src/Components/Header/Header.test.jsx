@@ -8,14 +8,14 @@ import { act } from 'react-dom/test-utils';
 
 describe('Testing Header component...', () => {
   const store = configureStore({
-    reducer: storefrontReducer,
+    reducer: storefrontReducer
   });
 
   test('Header should be visible', () => {
     render(
       <Provider store={store}>
         <Header />
-      </Provider>,
+      </Provider>
     );
 
     expect(screen.getByText('Belethors General Goods')).toBeVisible();
@@ -26,7 +26,7 @@ describe('Testing Header component...', () => {
     render(
       <Provider store={store}>
         <Header />
-      </Provider>,
+      </Provider>
     );
 
     let showCartState = store.getState().cart.showCart;

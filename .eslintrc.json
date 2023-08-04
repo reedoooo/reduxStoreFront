@@ -42,7 +42,8 @@
       "error",
       {
         "singleQuote": true,
-        "parser": "flow"
+        "parser": "flow",
+        "trailingComma": "none"
       }
     ]
   },

@@ -8,7 +8,7 @@ export const loadProductsFromAPI = () => async (dispatch) => {
   try {
     // Fetch all products from the server
     const apiResponse = await fetch(
-      `${process.env.REACT_APP_SERVER}/api/products`,
+      `${process.env.REACT_APP_SERVER}/api/products`
     );
     console.log('API response received');
 
@@ -24,7 +24,7 @@ export const loadProductsFromAPI = () => async (dispatch) => {
     // Assign a unique key to each product
     productsData = productsData.map((product, index) => ({
       ...product,
-      key: `${index}_${Math.random()}`,
+      key: `${index}_${Math.random()}`
     }));
     console.log('Unique key assigned to each product');
 
@@ -44,9 +44,9 @@ export const addProductToDatabase = (productData) => async () => {
   const response = await fetch(`${process.env.REACT_APP_SERVER}/api/products`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(productData),
+    body: JSON.stringify(productData)
   });
 
   // Parse the JSON response
@@ -63,8 +63,8 @@ export const deleteProductFromDatabase = (productId) => async () => {
     const response = await fetch(
       `${process.env.REACT_APP_SERVER}/api/products/${productId.toString()}`,
       {
-        method: 'DELETE',
-      },
+        method: 'DELETE'
+      }
     );
 
     if (!response.ok) {
@@ -81,12 +81,12 @@ export const deleteProductFromDatabase = (productId) => async () => {
 export const adjustStockOnAddingToCart = (productId) => async () => {
   console.log(
     'store, products, adjustStockOnAddingToCart, productId',
-    productId,
+    productId
   );
 
   // Fetch specific product details from the server
   const apiResponse = await fetch(
-    `${process.env.REACT_APP_SERVER}/api/products/${productId.toString()}`,
+    `${process.env.REACT_APP_SERVER}/api/products/${productId.toString()}`
   );
   const productDetails = await apiResponse.json();
   console.log('store, products, productDetails', productDetails);
@@ -106,10 +106,10 @@ export const adjustStockOnAddingToCart = (productId) => async () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'application/json',
+          Accept: 'application/json'
         },
-        body: JSON.stringify(updatedDetails),
-      },
+        body: JSON.stringify(updatedDetails)
+      }
     );
 
     console.log('Product stock updated on the server');
@@ -125,19 +125,19 @@ export const replenishStockInServer = createAsyncThunk(
 
       const id = String(product._id);
       const response = await fetch(
-        `${process.env.REACT_APP_SERVER}/api/products/${id}`,
+        `${process.env.REACT_APP_SERVER}/api/products/${id}`
       );
       const existingProduct = await response.json();
       const updateBody = {
-        inStock: existingProduct.inStock + product.quantity,
+        inStock: existingProduct.inStock + product.quantity
       };
       await fetch(`${process.env.REACT_APP_SERVER}/api/products/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'application/json',
+          Accept: 'application/json'
         },
-        body: JSON.stringify(updateBody),
+        body: JSON.stringify(updateBody)
       });
 
       console.log('Product stock replenished in server');
@@ -146,7 +146,7 @@ export const replenishStockInServer = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  },
+  }
 );
 
 // Asynchronously adjust product stock on server-side database based on quantity change
@@ -158,7 +158,7 @@ export const adjustStockOnServer =
 
       // Fetch the product data from the server
       const response = await fetch(
-        `${process.env.REACT_APP_SERVER}/api/products/${id}`,
+        `${process.env.REACT_APP_SERVER}/api/products/${id}`
       );
 
       // Check if the response is okay
@@ -172,7 +172,7 @@ export const adjustStockOnServer =
       // Check for sufficient stock before adding to cart
       if (quantityChange > 0 && productData.inStock <= 0) {
         throw new Error(
-          'Cannot add more items to your cart. Item might be out of stock.',
+          'Cannot add more items to your cart. Item might be out of stock.'
         );
       }
 
@@ -186,10 +186,10 @@ export const adjustStockOnServer =
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            Accept: 'application/json',
+            Accept: 'application/json'
           },
-          body: JSON.stringify(updateBody),
-        },
+          body: JSON.stringify(updateBody)
+        }
       );
 
       // Check if the update response is okay
@@ -207,14 +207,14 @@ export const adjustStockOnServer =
 const productSlice = createSlice({
   name: 'productData',
   initialState: {
-    productList: [],
+    productList: []
   },
   reducers: {
     // Reducer to load all products into the Redux store
     loadAllProducts(state, action) {
       state.productList = action.payload;
-    },
-  },
+    }
+  }
 });
 
 // Export loadAllProducts action

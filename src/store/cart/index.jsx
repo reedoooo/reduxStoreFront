@@ -7,25 +7,25 @@ export const replenishStockInServer = createAsyncThunk(
     try {
       const id = String(product._id);
       const response = await fetch(
-        `${process.env.REACT_APP_SERVER}/api/products/${id}`,
+        `${process.env.REACT_APP_SERVER}/api/products/${id}`
       );
       const existingProduct = await response.json();
       const updateBody = {
-        inStock: existingProduct.inStock + product.quantity,
+        inStock: existingProduct.inStock + product.quantity
       };
       await fetch(`${process.env.REACT_APP_SERVER}/api/products/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'application/json',
+          Accept: 'application/json'
         },
-        body: JSON.stringify(updateBody),
+        body: JSON.stringify(updateBody)
       });
       return existingProduct;
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  },
+  }
 );
 
 export const adjustStockOnServer = createAsyncThunk(
@@ -33,7 +33,7 @@ export const adjustStockOnServer = createAsyncThunk(
   async ({ id, quantityChange }, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_SERVER}/api/products/${id}`,
+        `${process.env.REACT_APP_SERVER}/api/products/${id}`
       );
 
       if (!response.ok) {
@@ -44,7 +44,7 @@ export const adjustStockOnServer = createAsyncThunk(
 
       if (quantityChange > 0 && productData.inStock <= 0) {
         throw new Error(
-          'Cannot add more items to your cart. Item might be out of stock.',
+          'Cannot add more items to your cart. Item might be out of stock.'
         );
       }
 
@@ -55,10 +55,10 @@ export const adjustStockOnServer = createAsyncThunk(
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            Accept: 'application/json',
+            Accept: 'application/json'
           },
-          body: JSON.stringify(updateBody),
-        },
+          body: JSON.stringify(updateBody)
+        }
       );
 
       if (!updateResponse.ok) {
@@ -69,7 +69,7 @@ export const adjustStockOnServer = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  },
+  }
 );
 
 const cartSlice = createSlice({
@@ -77,13 +77,13 @@ const cartSlice = createSlice({
   initialState: {
     products: [],
     totalAmount: 0,
-    cartVisible: false,
+    cartVisible: false
   },
   reducers: {
     addProductToCart(state, action) {
       const product = action.payload;
       const existingProductIndex = state.products.findIndex(
-        (prod) => prod.key === product.key,
+        (prod) => prod.key === product.key
       );
 
       if (existingProductIndex >= 0) {
@@ -94,7 +94,7 @@ const cartSlice = createSlice({
           category: product.category,
           name: product.name,
           price: product.price,
-          quantity: 1,
+          quantity: 1
         };
         state.products = [...state.products, newItem];
       }
@@ -104,12 +104,12 @@ const cartSlice = createSlice({
 
     removeProductFromCart(state, action) {
       let filteredItems = state.products.filter(
-        (product) => product.key !== action.payload.key,
+        (product) => product.key !== action.payload.key
       );
 
       let updatedTotal = filteredItems.reduce(
         (acc, current) => acc + current.price * current.quantity,
-        0,
+        0
       );
 
       state.products = filteredItems;
@@ -130,7 +130,7 @@ const cartSlice = createSlice({
 
         let updatedTotal = currentItems.reduce(
           (acc, current) => acc + current.price * current.quantity,
-          0,
+          0
         );
 
         state.products = currentItems;
@@ -142,7 +142,7 @@ const cartSlice = createSlice({
 
     toggleCartVisibility(state) {
       state.cartVisible = !state.cartVisible;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -152,14 +152,14 @@ const cartSlice = createSlice({
       .addCase(replenishStockInServer.rejected, (state, action) => {
         console.error('Failed to replenish stock', action.payload);
       });
-  },
+  }
 });
 
 export const {
   addProductToCart,
   removeProductFromCart,
   changeProductQuantity,
-  toggleCartVisibility,
+  toggleCartVisibility
 } = cartSlice.actions;
 
 export default cartSlice;

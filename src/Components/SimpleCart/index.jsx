@@ -7,26 +7,26 @@ import {
   Box,
   Card,
   CardContent,
-  styled,
+  styled
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import cartSlice, {
   adjustStockOnServer as modifyServerSideStock,
-  replenishStockInServer as reStockServer,
+  replenishStockInServer as reStockServer
 } from '../../store/cart';
 
 const StyledDrawer = styled(Drawer)({
   '.MuiDrawer-paper': {
-    width: '30%',
-  },
+    width: '30%'
+  }
 });
 
 const StyledCard = styled(Card)({
-  margin: '1rem',
+  margin: '1rem'
 });
 
 const StyledButton = styled(Button)({
-  margin: '0.5rem',
+  margin: '0.5rem'
 });
 
 function SimpleCart() {
@@ -60,8 +60,8 @@ function SimpleCart() {
       dispatch(
         changeProductQuantity({
           product,
-          quantityChange: quantityChange,
-        }),
+          quantityChange: quantityChange
+        })
       );
     } catch (error) {
       console.error('Failed to adjust stock on server: ', error);
@@ -90,7 +90,7 @@ function SimpleCart() {
                       sx={{
                         display: 'flex',
                         justifyContent: 'space-between',
-                        alignItems: 'center',
+                        alignItems: 'center'
                       }}
                     >
                       <Typography variant="body1">
@@ -100,7 +100,7 @@ function SimpleCart() {
                       <Box
                         sx={{
                           display: 'flex',
-                          justifyContent: 'space-between',
+                          justifyContent: 'space-between'
                         }}
                       >
                         <StyledButton
@@ -134,7 +134,7 @@ function SimpleCart() {
                     </CardContent>
                   </StyledCard>
                 )
-              ),
+              )
             )}
         </div>
 
@@ -142,7 +142,7 @@ function SimpleCart() {
           variant="contained"
           onClick={() => {
             console.log(
-              'https://imgflip.com/s/meme/Shut-Up-And-Take-My-Money-Fry.jpg',
+              'https://imgflip.com/s/meme/Shut-Up-And-Take-My-Money-Fry.jpg'
             );
           }}
           style={{ padding: '0' }}

@@ -15,17 +15,17 @@ describe('SimpleCart', () => {
         showCart: true,
         items: [
           { name: 'Item 1', quantity: 1 },
-          { name: 'Item 2', quantity: 2 },
+          { name: 'Item 2', quantity: 2 }
         ],
-        total: 5.0,
-      },
+        total: 5.0
+      }
     });
 
     // Provides the store to your App
     component = render(
       <Provider store={store}>
         <SimpleCart />
-      </Provider>,
+      </Provider>
     );
   });
 

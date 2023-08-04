@@ -6,13 +6,13 @@ import {
   CardContent,
   Typography,
   Box,
-  Button,
+  Button
   // TextField,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import cartSlice, {
   adjustStockOnServer as modifyServerSideStock,
-  replenishStockInServer as reStockServer,
+  replenishStockInServer as reStockServer
 } from '../../store/cart';
 
 // function CustomTextField({ id = 'outlined', label, type }) {
@@ -53,8 +53,8 @@ function ShoppingCart() {
       dispatch(
         changeProductQuantity({
           product,
-          quantityChange: quantityChange,
-        }),
+          quantityChange: quantityChange
+        })
       );
     } catch (error) {
       console.error('Failed to adjust stock on server: ', error);
@@ -75,8 +75,8 @@ function ShoppingCart() {
           width: '15%',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
-        },
+          justifyContent: 'space-between'
+        }
       }}
     >
       <div>
@@ -87,7 +87,7 @@ function ShoppingCart() {
                 sx={{
                   display: 'flex',
                   justifyContent: 'space-between',
-                  alignItems: 'center',
+                  alignItems: 'center'
                 }}
               >
                 <Typography variant="body1">
@@ -97,7 +97,7 @@ function ShoppingCart() {
                 <Box
                   sx={{
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'space-between'
                   }}
                 >
                   <Button
@@ -133,7 +133,7 @@ function ShoppingCart() {
         variant="contained"
         onClick={() => {
           console.log(
-            'https://imgflip.com/s/meme/Shut-Up-And-Take-My-Money-Fry.jpg',
+            'https://imgflip.com/s/meme/Shut-Up-And-Take-My-Money-Fry.jpg'
           );
         }}
         style={{ padding: '0' }}
