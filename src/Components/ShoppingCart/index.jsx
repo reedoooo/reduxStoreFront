@@ -7,20 +7,17 @@ import {
   Typography,
   Box,
   Button,
-  TextField,
+  // TextField,
 } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Link } from 'react-router-dom';
 import cartSlice, {
   adjustStockOnServer as modifyServerSideStock,
   replenishStockInServer as reStockServer,
 } from '../../store/cart';
 
-function CustomTextField({ id = 'outlined', label, type }) {
-  return <TextField id={id} label={label} type={type} />;
-}
+// function CustomTextField({ id = 'outlined', label, type }) {
+//   return <TextField id={id} label={label} type={type} />;
+// }
 
 function ShoppingCart() {
   const { toggleCartVisibility, removeProductFromCart, changeProductQuantity } =
