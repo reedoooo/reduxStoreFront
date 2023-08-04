@@ -13,7 +13,7 @@ describe('Testing Products component...', () => {
     render(
       <Provider store={store}>
         <Products />
-      </Provider>,
+      </Provider>
     );
 
     expect(screen.getByText('Dry Food')).toBeVisible;
@@ -28,12 +28,12 @@ describe('Testing Products component...', () => {
     render(
       <Provider store={store}>
         <Products />
-      </Provider>,
+      </Provider>
     );
 
     store.dispatch({
       type: 'SET_ACTIVECATEGORY',
-      payload: 'food',
+      payload: 'food'
     });
 
     expect(screen.getByText('Dry Food')).toBeVisible;
@@ -48,12 +48,12 @@ describe('Testing Products component...', () => {
     render(
       <Provider store={store}>
         <Products />
-      </Provider>,
+      </Provider>
     );
 
     store.dispatch({
       type: 'SET_ACTIVECATEGORY',
-      payload: 'accessories',
+      payload: 'accessories'
     });
 
     expect(screen.getByText('Dry Food')).not.toBeVisible;

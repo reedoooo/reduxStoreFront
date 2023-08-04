@@ -11,8 +11,8 @@ describe('Categories', () => {
   beforeEach(() => {
     store = configureStore({
       reducer: {
-        categories: categoriesSlice,
-      },
+        categories: categoriesSlice
+      }
     });
     store.dispatch = jest.fn();
   });
@@ -21,7 +21,7 @@ describe('Categories', () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <Categories />
-      </Provider>,
+      </Provider>
     );
 
     expect(getByTestId('categoryContainer')).toBeInTheDocument();
@@ -31,7 +31,7 @@ describe('Categories', () => {
     render(
       <Provider store={store}>
         <Categories />
-      </Provider>,
+      </Provider>
     );
 
     expect(store.dispatch).toHaveBeenCalledWith(expect.any(Function));
@@ -41,13 +41,13 @@ describe('Categories', () => {
     const { getByTestId } = render(
       <Provider store={store}>
         <Categories />
-      </Provider>,
+      </Provider>
     );
 
     fireEvent.click(getByTestId('paper_someCategory'));
 
     expect(store.dispatch).toHaveBeenCalledWith(
-      categoriesSlice.actions.changeActiveCategory('someCategory'),
+      categoriesSlice.actions.changeActiveCategory('someCategory')
     );
   });
 

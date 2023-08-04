@@ -9,19 +9,19 @@ import {
   CardMedia,
   Box as BoxElement,
   Button as ButtonElement,
-  styled,
+  styled
 } from '@mui/material';
 import { addProductToCart, changeProductQuantity } from '../../store/cart';
 import {
   useDispatch as useActionDispatcher,
-  useSelector as useStoreSelector,
+  useSelector as useStoreSelector
 } from 'react-redux';
 
 const CustomCard = styled(CardElement)(({ theme }) => ({
   width: '45%',
   height: '100%',
   alignSelf: 'center',
-  boxShadow: theme.shadows[3],
+  boxShadow: theme.shadows[3]
 }));
 
 function SingleProduct() {
@@ -41,7 +41,7 @@ function SingleProduct() {
     product._id = uniqueProductId;
 
     const productInCart = cartData.items?.find(
-      (item) => item._id === product._id,
+      (item) => item._id === product._id
     );
     console.log('handleAddProductToCart - productInCart: ', productInCart);
     if (!productInCart) {

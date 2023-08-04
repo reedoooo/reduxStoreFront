@@ -11,14 +11,14 @@ import {
   Container,
   Button,
   styled,
-  Box,
+  Box
 } from '@mui/material';
 import { loadProductsFromAPI } from '../../store/products';
 import {
   addProductToCart,
   changeProductQuantity,
   removeProductFromCart,
-  replenishStockInServer,
+  replenishStockInServer
 } from '../../store/cart';
 
 const CustomCard = styled(Card)(({ theme }) => ({
@@ -26,7 +26,7 @@ const CustomCard = styled(Card)(({ theme }) => ({
   height: '100%',
   margin: '1rem',
   boxShadow: theme.shadows[3],
-  position: 'relative',
+  position: 'relative'
 }));
 
 const ProductDetailsOverlay = styled(Box)(({ theme }) => ({
@@ -43,19 +43,19 @@ const ProductDetailsOverlay = styled(Box)(({ theme }) => ({
   opacity: 0,
   transition: theme.transitions.create('opacity', {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
+    duration: theme.transitions.duration.enteringScreen
   }),
   '&:hover': {
-    opacity: 1,
-  },
+    opacity: 1
+  }
 }));
 
 function Products() {
   const productData = useSelector(
-    (storefrontState) => storefrontState.products,
+    (storefrontState) => storefrontState.products
   );
   const categoryData = useSelector(
-    (storefrontState) => storefrontState.categories,
+    (storefrontState) => storefrontState.categories
   );
   const cartData = useSelector((storefrontState) => storefrontState.cart);
   const dispatch = useDispatch();
@@ -68,22 +68,22 @@ function Products() {
 
     const productWithKey = {
       ...product,
-      key: `${product.id}-${index}`,
+      key: `${product.id}-${index}`
     };
 
     const productInCart = cartData.items?.find(
-      (item) => item.key === productWithKey.key,
+      (item) => item.key === productWithKey.key
     );
 
     if (!productInCart) {
       dispatch(addProductToCart(productWithKey));
       dispatch(
-        changeProductQuantity({ id: productWithKey.key, quantityChange: 1 }),
+        changeProductQuantity({ id: productWithKey.key, quantityChange: 1 })
       );
     } else {
       const quantityChange = 1;
       dispatch(
-        changeProductQuantity({ id: productWithKey._id, quantityChange }),
+        changeProductQuantity({ id: productWithKey._id, quantityChange })
       );
     }
   };
@@ -148,8 +148,8 @@ function Products() {
   const productList = categoryData.selectedCategory?.name
     ? productData.productList.flatMap((listItem) =>
         listItem.products.filter(
-          (product) => product.category === categoryData.selectedCategory.name,
-        ),
+          (product) => product.category === categoryData.selectedCategory.name
+        )
       )
     : productData.productList.flatMap((listItem) => listItem.products);
 
@@ -159,7 +159,7 @@ function Products() {
       sx={{
         display: 'flex',
         flexWrap: 'wrap',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
       }}
     >
       {productList.map((product, index) => (

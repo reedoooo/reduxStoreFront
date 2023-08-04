@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const retrieveCategories = () => async () => {
   const serverResponse = await fetch(
-    `${process.env.REACT_APP_SERVER}/api/categories`,
+    `${process.env.REACT_APP_SERVER}/api/categories`
   );
   const categoriesData = await serverResponse.json();
   console.log('store, categories, categoriesData', categoriesData);
@@ -14,12 +14,12 @@ const categoriesSlice = createSlice({
   name: 'categoryList',
   initialState: {
     allCategories: [],
-    selectedCategory: {},
+    selectedCategory: {}
   },
   reducers: {
     changeActiveCategory(state, action) {
       state.selectedCategory = state.allCategories.find(
-        (category) => category.name === action.payload.toLowerCase(),
+        (category) => category.name === action.payload.toLowerCase()
       );
     },
     resetActiveCategory(state, action) {
@@ -27,8 +27,8 @@ const categoriesSlice = createSlice({
     },
     loadCategories(state, action) {
       state.allCategories = action.payload;
-    },
-  },
+    }
+  }
 });
 
 export default categoriesSlice;

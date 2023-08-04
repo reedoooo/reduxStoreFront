@@ -6,7 +6,7 @@ import { combineReducers } from 'redux';
 const storefrontReducer = combineReducers({
   categories: categoriesSlice.reducer,
   products: productSlice.reducer,
-  cart: cartSlice.reducer,
+  cart: cartSlice.reducer
 });
 
 export default storefrontReducer;

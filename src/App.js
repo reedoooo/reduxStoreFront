@@ -14,7 +14,7 @@ import { Container as MuiContainer } from '@mui/material';
 import SingleProduct from './Components/ProductDetails';
 
 let shopStore = createStoreWithReducer({
-  reducer: shopReducer,
+  reducer: shopReducer
 });
 
 const App = () => {

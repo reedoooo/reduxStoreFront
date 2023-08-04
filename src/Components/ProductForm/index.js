@@ -7,7 +7,7 @@ function AddProductForm() {
     category: '',
     name: '',
     price: '',
-    inStock: '',
+    inStock: ''
   });
 
   const handleChange = (e) =>

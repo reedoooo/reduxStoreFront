@@ -5,13 +5,13 @@ import {
   AppBar,
   Box,
   Toolbar,
-  Button,
+  Button
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleCartVisibility } from '../../store/cart'; // Updated import
 
 const CustomAppBar = styled(AppBar)(({ theme }) => ({
-  background: theme.palette.primary.dark,
+  background: theme.palette.primary.dark
 }));
 
 function Header() {
@@ -38,7 +38,7 @@ function Header() {
               cartState.items
                 ? cartState.items.reduce(
                     (acc, current) => acc + current.quantity,
-                    0,
+                    0
                   )
                 : 0
             })`}

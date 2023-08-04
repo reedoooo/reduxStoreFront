@@ -1,7 +1,7 @@
 import React, { useEffect as startEffect } from 'react';
 import {
   useSelector as selectState,
-  useDispatch as dispatchAction,
+  useDispatch as dispatchAction
 } from 'react-redux';
 import { Box, Typography as TextUI, Paper as PaperUI } from '@mui/material';
 import { styled } from '@mui/system';
@@ -14,8 +14,8 @@ const StyledPaper = styled(PaperUI)(({ theme }) => ({
   cursor: 'pointer',
   '&.activeCategory': {
     backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
-  },
+    color: theme.palette.common.white
+  }
 }));
 
 function Categories() {
@@ -49,7 +49,7 @@ function Categories() {
 
   startEffect(() => {
     dispatch(retrieveCategories()).then((response) =>
-      dispatch(loadCategories(response)),
+      dispatch(loadCategories(response))
     );
   }, []);
 
@@ -65,7 +65,7 @@ function Categories() {
         sx={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', // adapt this to your needs
-          gridGap: '1em',
+          gridGap: '1em'
         }}
       >
         {categories.categories.map((category) => {
