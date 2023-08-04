@@ -10,8 +10,8 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "prettier"
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -42,7 +42,6 @@
       "error",
       {
         "singleQuote": true,
-        "parser": "flow",
         "trailingComma": "none"
       }
     ]

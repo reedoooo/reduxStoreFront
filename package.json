@@ -55,6 +55,7 @@
     "eslint-config-prettier": "^8.10.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^3.4.1",
-    "prettier": "^2.3.2"
+    "prettier": "^2.3.2",
+    "prettier-eslint": "^15.0.1"
   }
 }
