@@ -8,6 +8,8 @@ This is a basic retail application primarily centered on React & Redux. This pro
 
 [Hosted Application](https://redux-storefront.netlify.app/)
 
+<img src="public/screenshot.png" width="33%" alt="Homepage">
+
 ## Project Scope
 
 The aim is to develop an application mimicking an online retail store.
